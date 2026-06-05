@@ -1,0 +1,44 @@
+# SwiftLint configuration for Tact
+# Run: swiftlint lint --fix
+
+disabled_rules:
+  - trailing_whitespace
+  - identifier_name
+  - todo
+
+opt_in_rules:
+  - empty_count
+  - explicit_init
+  - first_where
+  - force_unwrapping
+  - implicit_return
+  - last_where
+  - sorted_imports
+  - toggle_bool
+
+excluded:
+  - .build
+  - .swiftpm
+  - Apps/*/Generated
+  - Resources
+  - Tmp
+
+line_length:
+  warning: 120
+  error: 160
+
+file_length:
+  warning: 400
+  error: 600
+
+function_body_length:
+  warning: 50
+  error: 80
+
+type_body_length:
+  warning: 300
+  error: 500
+
+cyclomatic_complexity:
+  warning: 10
+  error: 15
