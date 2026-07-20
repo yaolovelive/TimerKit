@@ -39,15 +39,57 @@ public enum TactState: String, Sendable, CaseIterable {
         }
     }
 
-    /// Mid stop used for the active progress indicator.
+    /// Mid stop used for the active progress indicator and primary
+    /// action affordances. Idle shares the focus accent so the start
+    /// control reads as actionable before a session begins.
     public var accentColor: Color {
         switch self {
-        case .idle:        return Color(red: 0.53, green: 0.53, blue: 0.50)
-        case .focus:       return Color(red: 0.11, green: 0.62, blue: 0.46)
-        case .shortBreak:  return Color(red: 0.73, green: 0.46, blue: 0.09)
-        case .longBreak:   return Color(red: 0.24, green: 0.62, blue: 0.31)
-        case .capture:     return Color(red: 0.50, green: 0.47, blue: 0.87)
+        case .idle, .focus: return Color(hex: 0x00B894)
+        case .shortBreak:   return Color(hex: 0xFFB100)
+        case .longBreak:    return Color(hex: 0x2ECC71)
+        case .capture:      return Color(hex: 0x9B59B6)
         }
+    }
+
+    /// Muted companion to primaryTextColor for labels and captions.
+    public var secondaryTextColor: Color {
+        primaryTextColor.opacity(0.75)
+    }
+
+    /// Wallpaper-style gradient stops behind the main view on
+    /// macOS/iOS. watchOS uses the flat backgroundColor instead.
+    public var backgroundGradientColors: [Color] {
+        switch self {
+        case .idle:
+            return [Color(hex: 0xFCF9F8), Color(hex: 0xF0EDED), Color(hex: 0xF2F2F7)]
+        case .focus:
+            return [Color(hex: 0xE6F4F1), Color(hex: 0xFFFFFF), Color(hex: 0x006B55).opacity(0.06)]
+        case .shortBreak:
+            return [Color(hex: 0xFFF8E6), Color(hex: 0xFFFFFF), Color(hex: 0xFFB100).opacity(0.09)]
+        case .longBreak:
+            return [Color(hex: 0xE8F5E9), Color(hex: 0xFFFFFF), Color(hex: 0x2ECC71).opacity(0.08)]
+        case .capture:
+            return [Color(hex: 0xF3E5F5), Color(hex: 0xE1BEE7)]
+        }
+    }
+
+    /// Convenience gradient built from backgroundGradientColors.
+    public var backgroundGradient: LinearGradient {
+        LinearGradient(
+            colors: backgroundGradientColors,
+            startPoint: .topLeading,
+            endPoint: .bottomTrailing
+        )
+    }
+}
+
+private extension Color {
+    init(hex: UInt32) {
+        self.init(
+            red: Double((hex >> 16) & 0xff) / 255,
+            green: Double((hex >> 8) & 0xff) / 255,
+            blue: Double(hex & 0xff) / 255
+        )
     }
 }
 

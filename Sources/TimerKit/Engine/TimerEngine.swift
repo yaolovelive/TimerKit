@@ -27,6 +27,7 @@ public final class TimerEngine {
 
     public func start(_ session: TimerSession) {
         activeSession = session
+        lastTickAt = Date()
         scheduleHeartbeat()
     }
 
@@ -45,6 +46,7 @@ public final class TimerEngine {
             session.pauseHistory[session.pauseHistory.count - 1] = updated
         }
         session.state = .running
+        lastTickAt = Date()
         scheduleHeartbeat()
     }
 

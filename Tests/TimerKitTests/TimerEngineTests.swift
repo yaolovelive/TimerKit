@@ -18,6 +18,19 @@ struct TimerEngineTests {
         #expect(engine.activeSession?.state == .running)
     }
 
+    @Test func startRefreshesLastTickTime() {
+        let engine = TimerEngine()
+        let previousTick = engine.lastTickAt
+        Thread.sleep(forTimeInterval: 0.01)
+
+        engine.start(TimerSession(
+            duration: 60,
+            initiatedByDeviceID: "test-device"
+        ))
+
+        #expect(engine.lastTickAt > previousTick)
+    }
+
     @Test func pauseAddsPauseRecord() {
         let engine = TimerEngine()
         let session = TimerSession(
@@ -44,6 +57,22 @@ struct TimerEngineTests {
 
         #expect(engine.activeSession?.state == .running)
         #expect(engine.activeSession?.pauseHistory.first?.resumedAt != nil)
+    }
+
+    @Test func resumeRefreshesLastTickTime() {
+        let engine = TimerEngine()
+        let session = TimerSession(
+            duration: 60,
+            initiatedByDeviceID: "test-device"
+        )
+        engine.start(session)
+        engine.pause()
+        let previousTick = engine.lastTickAt
+        Thread.sleep(forTimeInterval: 0.01)
+
+        engine.resume()
+
+        #expect(engine.lastTickAt > previousTick)
     }
 
     @Test func elapsedExcludesPauseDuration() {
