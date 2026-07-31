@@ -48,3 +48,27 @@ public final class HapticPlayer {
     }
 }
 #endif
+
+#if canImport(SwiftUI)
+extension HapticEvent {
+    /// The haptic to play when the visual state changes. Returns nil when
+    /// the transition should stay silent: nothing changed, the capture
+    /// panel opened or closed (it carries its own confirmation), or the
+    /// user cancelled a session (cancelling should not feel rewarded).
+    public static func forTransition(from old: TactState, to new: TactState) -> HapticEvent? {
+        guard old != new else { return nil }
+        guard old != .capture, new != .capture else { return nil }
+
+        switch (old, new) {
+        case (_, .focus):
+            return (old == .shortBreak || old == .longBreak) ? .breakComplete : .sessionStart
+        case (.focus, .shortBreak), (.focus, .longBreak):
+            return .workComplete
+        case (.longBreak, .idle):
+            return .cycleComplete
+        default:
+            return nil
+        }
+    }
+}
+#endif
