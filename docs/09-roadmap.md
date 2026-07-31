@@ -56,7 +56,8 @@ compress to ~10–12 weeks.
 - Independent Watch App
 - Complications on all major watch faces
 - Crown adjustment for duration
-- Speech.framework for voice memos
+- System dictation via SwiftUI `TextFieldLink` for voice memos
+  (Speech.framework is unavailable on watchOS)
 - WCSession for iPhone pairing
 - Custom haptic patterns
 
