@@ -165,6 +165,17 @@ public final class FocusController {
         try? modelContext.save()
     }
 
+    #if os(iOS)
+    public func consumePendingCommand(_ command: TactPendingCommand, modelContext: ModelContext) {
+        switch command.kind {
+        case .togglePrimary:
+            togglePrimary(modelContext: modelContext)
+        case .cancel:
+            cancel(modelContext: modelContext)
+        }
+    }
+    #endif
+
     public func presentCapture() {
         captureText = ""
         captureError = nil
