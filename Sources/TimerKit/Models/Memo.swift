@@ -18,6 +18,16 @@ public enum MemoType: String, Codable, Sendable {
     case reflection  // saved as a response to a weekly report question
 }
 
+public struct CheckInReminder: Codable, Sendable, Hashable {
+    public var scheduledFor: Date
+    public var completedAt: Date?
+
+    public init(scheduledFor: Date, completedAt: Date? = nil) {
+        self.scheduledFor = scheduledFor
+        self.completedAt = completedAt
+    }
+}
+
 @Model
 public final class Memo {
     public var id: UUID = UUID()
@@ -34,6 +44,9 @@ public final class Memo {
     /// Snapshot of the focus context active at the moment of capture.
     public var capturedContext: CapturedContext?
 
+    /// Local notification check-in state for this memo.
+    public var checkInReminder: CheckInReminder?
+
     @Relationship public var tag: Tag?
 
     public init(
@@ -43,6 +56,7 @@ public final class Memo {
         detectedType: MemoType = .plain,
         convertedToTaskID: UUID? = nil,
         capturedContext: CapturedContext? = nil,
+        checkInReminder: CheckInReminder? = nil,
         tag: Tag? = nil,
         archived: Bool = false
     ) {
@@ -53,6 +67,7 @@ public final class Memo {
         self.archived = archived
         self.convertedToTaskID = convertedToTaskID
         self.capturedContext = capturedContext
+        self.checkInReminder = checkInReminder
         self.tag = tag
     }
 }

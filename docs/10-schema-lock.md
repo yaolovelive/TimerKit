@@ -76,6 +76,7 @@ User-captured note, optionally tagged and linked to a pomodoro session.
 | `archived` | Bool | No | Soft-archived from Inbox; captured data is preserved |
 | `convertedToTaskID` | UUID? | Yes | If converted to system reminder via EventKit |
 | `capturedContext` | CapturedContext? | Yes | Frozen snapshot: pomodoroID, taskTitle, tagName, timeIntoSession |
+| `checkInReminder` | CheckInReminder? | Yes | Local notification check-in state: scheduledFor, completedAt |
 | `tag` | Tag? | Yes | Relationship: optional categorization |
 
 **MemoType enum values**: `plain`, `reminder`, `todo`, `url`, `contact`, `question`, `reflection`

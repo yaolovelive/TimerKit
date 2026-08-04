@@ -16,6 +16,7 @@ public final class FocusController {
 
     public var selectedDuration: TimeInterval = 25 * 60
     public var taskTitle: String = ""
+    public var selectedCheckInDelay: CheckInDelay?
     public var isCapturePresented = false
     public var captureText = "" {
         didSet {
@@ -178,12 +179,14 @@ public final class FocusController {
 
     public func presentCapture() {
         captureText = ""
+        selectedCheckInDelay = nil
         captureError = nil
         isCapturePresented = true
     }
 
     public func dismissCapture() {
         captureText = ""
+        selectedCheckInDelay = nil
         captureError = nil
         isCapturePresented = false
     }
@@ -202,6 +205,13 @@ public final class FocusController {
                 currentPomodoro: scheduler.currentPomodoro,
                 timeIntoCurrentSession: activeSession?.elapsed(at: engine.lastTickAt)
             )
+            if let selectedCheckInDelay, let lastSavedMemo {
+                CheckInScheduler.scheduleCheckIn(
+                    for: lastSavedMemo,
+                    delay: selectedCheckInDelay,
+                    modelContext: modelContext
+                )
+            }
             dismissCapture()
         } catch {
             captureError = "Could not save memo"

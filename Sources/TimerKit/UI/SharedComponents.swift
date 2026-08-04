@@ -103,6 +103,43 @@ public struct DetectionChip: View {
     }
 }
 
+public struct CheckInDelayPicker: View {
+    @Binding public var selection: CheckInDelay?
+
+    public init(selection: Binding<CheckInDelay?>) {
+        _selection = selection
+    }
+
+    public var body: some View {
+        FlowLayout(spacing: 8) {
+            delayChip(title: "不提醒", icon: "bell.slash", delay: nil)
+            ForEach(CheckInDelay.allCases, id: \.self) { delay in
+                delayChip(title: delay.label, icon: "clock", delay: delay)
+            }
+        }
+    }
+
+    private func delayChip(title: String, icon: String, delay: CheckInDelay?) -> some View {
+        Button {
+            selection = delay
+        } label: {
+            Label(title, systemImage: icon)
+                .font(.system(size: 12, weight: .medium))
+                .padding(.horizontal, 12)
+                .padding(.vertical, 8)
+                .background(
+                    (selection == delay ? TactState.capture.accentColor.opacity(0.25) : .white.opacity(0.4)),
+                    in: Capsule()
+                )
+                .overlay {
+                    Capsule().stroke(.white.opacity(selection == delay ? 0.5 : 0.2), lineWidth: 1)
+                }
+                .foregroundStyle(TactState.capture.secondaryTextColor)
+        }
+        .buttonStyle(.plain)
+    }
+}
+
 public struct FlowLayout: Layout {
     public var spacing: CGFloat
 
