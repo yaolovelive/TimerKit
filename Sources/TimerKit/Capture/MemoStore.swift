@@ -47,8 +47,28 @@ public final class MemoStore {
     /// Auto-archive memos older than 30 days that are unpinned and
     /// untouched. Call from a periodic BGAppRefreshTask.
     public func archiveStale(cutoff: Date = Date().addingTimeInterval(-30 * 86400)) throws {
-        // TODO: implement with FetchDescriptor + modelContext.delete or
-        // a separate `archived` flag (preferred — preserves data, removes
-        // from inbox queries).
+        var descriptor = FetchDescriptor<Memo>(
+            predicate: #Predicate { memo in
+                memo.createdAt < cutoff && !memo.archived
+            }
+        )
+        descriptor.fetchLimit = nil
+        let staleMemos = try modelContext.fetch(descriptor)
+        staleMemos.forEach { $0.archived = true }
+        if !staleMemos.isEmpty {
+            try modelContext.save()
+        }
+    }
+
+    /// Archive a memo without deleting its captured data.
+    public func archive(_ memo: Memo) throws {
+        memo.archived = true
+        try modelContext.save()
+    }
+
+    /// Permanently delete a memo when the user explicitly requests it.
+    public func delete(_ memo: Memo) throws {
+        modelContext.delete(memo)
+        try modelContext.save()
     }
 }

@@ -25,6 +25,9 @@ public final class Memo {
     public var content: String = ""
     public var detectedType: MemoType = MemoType.plain
 
+    /// Soft-deleted from the Inbox while preserving the captured memo.
+    public var archived: Bool = false
+
     /// If this memo was converted to a system reminder via EventKit.
     public var convertedToTaskID: UUID?
 
@@ -40,12 +43,14 @@ public final class Memo {
         detectedType: MemoType = .plain,
         convertedToTaskID: UUID? = nil,
         capturedContext: CapturedContext? = nil,
-        tag: Tag? = nil
+        tag: Tag? = nil,
+        archived: Bool = false
     ) {
         self.id = id
         self.createdAt = createdAt
         self.content = content
         self.detectedType = detectedType
+        self.archived = archived
         self.convertedToTaskID = convertedToTaskID
         self.capturedContext = capturedContext
         self.tag = tag
